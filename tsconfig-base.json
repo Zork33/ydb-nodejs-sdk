@@ -19,11 +19,13 @@
     "resolveJsonModule": true
   },
   "include": [
+    "*.ts",
     "src/**/*.ts",
     "certs"
   ],
   "exclude": [
     "node_modules",
-    "package.json"
+    "package.json",
+    "src/__tests__"
   ]
 }

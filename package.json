@@ -19,7 +19,8 @@
     "test:integration:production": "jest --config jest.config.production.js",
     "test:all": "run-p test:unit test:integration:production",
     "test": "npm run test:unit",
-    "build": "tsc -p tsconfig-esm.json && tsc -p tsconfig-cjs.json",
+    "build-full": "tsc -p tsconfig-esm.json && tsc -p tsconfig-cjs.json",
+    "build": "tsc -p tsconfig-simple.json",
     "clean": "rimraf build",
     "prepublish": "npm run clean && npm run build && node ./fixup.js",
     "postinstall": "husky install"
@@ -37,12 +38,15 @@
   "license": "Apache",
   "dependencies": {
     "@grpc/grpc-js": "^1.5.3",
+    "dotenv": "^16.3.1",
+    "esbuild-plugin-serverless": "^0.2.2",
     "jsonwebtoken": "^9.0.0",
     "lodash": "^4.17.21",
     "long": "^4.0.0",
     "luxon": "^3.2.1",
     "reflect-metadata": "^0.1.13",
     "uuid": "^8.3.2",
+    "ydb-sdk": "^4.6.0",
     "ydb-sdk-proto": "^1.1.0"
   },
   "devDependencies": {
