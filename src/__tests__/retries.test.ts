@@ -69,8 +69,8 @@ describe('Retries on errors', () => {
     createError(BadRequest);
     createError(InternalError);
     createError(Aborted, 3); // have retries
-    createError(Unauthenticated);
-    createError(Unauthorized);
+    createError(Unauthenticated, 2); // once try to reathenticate
+    createError(Unauthorized, 2); // once try to reathenticate
     createError(Unavailable, 3); // have retries
     createError(Undetermined); // TODO: have retries for idempotent queries
     createError(Overloaded, 3); // have retries

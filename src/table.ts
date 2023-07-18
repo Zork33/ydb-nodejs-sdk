@@ -26,7 +26,7 @@ import {
     SessionBusy,
     MissingValue,
     YdbError,
-    MissingStatus,
+    MissingStatus, Unauthenticated, Unauthorized,
 } from './errors';
 
 import TableService = Ydb.Table.V1.TableService;
@@ -874,20 +874,25 @@ export class SessionPool extends EventEmitter {
         }
     }
 
-    private async _withSession<T>(session: Session, callback: SessionCallback<T>, maxRetries = 0): Promise<T> {
+    private async _withSession<T>(session: Session, callback: SessionCallback<T>, maxRetries = 0, reauth = false): Promise<T> {
         try {
             const result = await callback(session);
             session.release();
             return result;
         } catch (error) {
-            if (error instanceof BadSession || error instanceof SessionBusy) {
-                this.logger.debug('Encountered bad or busy session, re-creating the session');
+            const unauthenticated = error instanceof Unauthenticated || error instanceof Unauthorized
+            const badOrBusySession = error instanceof BadSession || error instanceof SessionBusy
+            if (unauthenticated || badOrBusySession) {
+                if (unauthenticated) { // drop current authentication
+
+                }
+                this.logger.debug(`Encountered ${badOrBusySession ? 'bad or busy' : 'unauthenticated'} session, re-creating the session`);
                 session.emit(SessionEvent.SESSION_BROKEN);
                 session = await this.createSession();
-                if (maxRetries > 0) {
+                if (maxRetries > 0 || (unauthenticated && !reauth)) { // try reauth only once, an this attempt does not count as a retry
                     this.logger.debug(`Re-running operation in new session, ${maxRetries} left.`);
                     session.acquire();
-                    return this._withSession(session, callback, maxRetries - 1);
+                    return this._withSession(session, callback, unauthenticated ? maxRetries : (maxRetries - 1), unauthenticated);
                 }
             } else {
                 session.release();
