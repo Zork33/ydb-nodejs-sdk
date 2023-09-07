@@ -1,7 +1,7 @@
-import {getLogger, Logger} from "../logging";
-import {TransportError, YdbError} from "../errors";
-import * as errors from "../errors";
-import {RetryParameters} from "./RetryParameters";
+import {getLogger, Logger} from "../../logging";
+import {TransportError, YdbError} from "../../errors";
+import * as errors from "../../errors";
+import {RetryParameters} from "../RetryParameters";
 
 const RETRYABLE_ERRORS_FAST = [
     errors.Unavailable,

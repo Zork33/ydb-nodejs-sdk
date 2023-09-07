@@ -1,5 +1,5 @@
 import {RetryParameters} from "./RetryParameters";
-import {RetryStrategy} from "./RetryStrategy";
+import {RetryStrategy} from "./internal/RetryStrategy";
 
 export async function withRetries<T>(
     originalFunction: () => Promise<T>,

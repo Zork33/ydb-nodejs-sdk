@@ -1,6 +1,6 @@
 import {Logger} from "../logging";
 import {RetryParameters} from "./RetryParameters";
-import {RetryStrategy} from "./RetryStrategy";
+import {RetryStrategy} from "./internal/RetryStrategy";
 
 export function retryable(strategyParams?: RetryParameters, retryStrategyLogger?: Logger) {
     return (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
