@@ -3,7 +3,7 @@ import {ISslCredentials, makeDefaultSslCredentials} from "../ssl-credentials";
 import jwt from "jsonwebtoken";
 import {GrpcService, sleep, withTimeout} from "../utils";
 import * as grpc from "@grpc/grpc-js";
-import {makeCredentialsMetadata} from "./makeCredentialsMetadata";
+import {makeCredentialsMetadata} from "./internal/makeCredentialsMetadata";
 import {IAuthService} from "./IAuthService";
 import {IIamCredentials} from "./IIamCredentials";
 import ICreateIamTokenResponse = yandex.cloud.iam.v1.ICreateIamTokenResponse;

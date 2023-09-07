@@ -4,7 +4,7 @@ import {ISslCredentials} from "../ssl-credentials";
 import {retryable} from "../retries";
 import {DateTime} from "luxon";
 import * as grpc from "@grpc/grpc-js";
-import {makeCredentialsMetadata} from "./makeCredentialsMetadata";
+import {makeCredentialsMetadata} from "./internal/makeCredentialsMetadata";
 import {IAuthService} from "./IAuthService";
 import AuthServiceResult = Ydb.Auth.LoginResult;
 

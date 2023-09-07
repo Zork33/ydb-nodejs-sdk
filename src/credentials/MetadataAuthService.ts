@@ -1,6 +1,6 @@
 import {MetadataTokenService} from "@yandex-cloud/nodejs-sdk/dist/token-service/metadata-token-service";
 import * as grpc from "@grpc/grpc-js";
-import {makeCredentialsMetadata} from "./makeCredentialsMetadata";
+import {makeCredentialsMetadata} from "./internal/makeCredentialsMetadata";
 import {sleep} from "../utils";
 import {IAuthService} from "./IAuthService";
 
