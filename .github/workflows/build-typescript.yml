@@ -9,9 +9,15 @@ jobs:
     steps:
       - name: Checkout project
         uses: actions/checkout@v3
+      - name: Find and Replace
+        uses: jacobtomlinson/gha-find-replace@v3
+        with:
+          find: "#.*\\(next line will be removed by build-typescript GitHub action to be included in dist branch\\)\\n.*\\n"
+          replace: "###"
+          regex: false
       - name: Build and push
         uses: alexthemaster/action-build-typescript@v1.3.1
         with:
           pushToBranch: true # optional; can either be true or false | defaults to false
-          branch: 'dist' # optional; the name of the branch the action should push the compiled code to | defaults to dist
-          githubToken: ${{ secrets.YDB_PLATFORM_BOT_TOKEN_REPO }} # required if you use the pushToBranch option
+          branch: 'build' # optional; the name of the branch the action should push the compiled code to | defaults to dist
+          githubToken: ${{ secrets.GH_TOKEN }} # required if you use the pushToBranch option
