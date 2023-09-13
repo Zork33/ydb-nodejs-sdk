@@ -2,7 +2,7 @@
 #
 # Copy this action to .github/workflows
 #
-# Add GH_TOKEN, which is Personal Access Token (PAT), to secrets or rename GH_TOKEN in this code to an already existing token
+# Add YDB_PLATFORM_BOT_TOKEN_REPO, which is Personal Access Token (PAT), to secrets or rename YDB_PLATFORM_BOT_TOKEN_REPO in this code to an already existing token
 #
 # Add to .gitignore a comment before line that ignores result of the build with the following postfix:
 #   (next line will be removed by pre-release-branch-update GitHub action to be included in dist branch)
@@ -32,7 +32,7 @@ jobs:
         with:
           include: ".gitignore"
           find: "#.*\\(next line will be removed by pre-release-branch-update GitHub action to be included in dist branch\\)\\n.*\\n"
-          replace: "###\\n"
+          replace: "###\n"
       - name: .gitignore
         run: cat .gitignore
         shell: bash
@@ -51,5 +51,5 @@ jobs:
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
-          github_token: ${{ secrets.GH_TOKEN }}
+          github_token: ${{ secrets.YDB_PLATFORM_BOT_TOKEN_REPO }}
           branch: "pre-release"
