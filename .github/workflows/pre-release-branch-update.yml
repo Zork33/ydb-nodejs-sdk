@@ -33,8 +33,14 @@ jobs:
           include: ".gitignore"
           find: "#.*\\(next line will be removed by build-typescript GitHub action to be included in dist branch\\)\\n.*\\n"
           replace: "###\\n"
+      - name: .gitignore
+        run: cat .gitignore
+        shell: bash
       - name: Build typescript project
         run: npm run build
+        shell: bash
+      - name: ls
+        run: ls
         shell: bash
       - name: Commit files to pre-release branch
         run: |
