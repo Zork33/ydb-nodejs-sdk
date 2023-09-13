@@ -31,7 +31,7 @@ jobs:
         uses: jacobtomlinson/gha-find-replace@v3
         with:
           include: ".gitignore"
-          find: "#.*\\(next line will be removed by build-typescript GitHub action to be included in dist branch\\)\\n.*\\n"
+          find: "#.*\\(next line will be removed by pre-release-branch-update GitHub action to be included in dist branch\\)\\n.*\\n"
           replace: "###\\n"
       - name: .gitignore
         run: cat .gitignore
