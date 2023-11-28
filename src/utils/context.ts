@@ -1,3 +1,5 @@
+// TODO: Add constructor with new id, to chain contexts into few sub spans
+
 /**
  * Context object allows to pass a context-chain (number of contexts, linked by "parent" field) through function calls stack.
  *
@@ -43,7 +45,7 @@ export class Context {
     /**
      * Calls the method passed as a callback with pass in the context from which the method was called.
      *
-     * The context can be obtained in the first line of the called function - *const ctx = getContext();*.
+     * The context can be obtained in the first line of the called function - *const ctx.do = getContext();*.
      */
     async do<T>(callback: () => T): Promise<T> {
         // eslint-disable-next-line @typescript-eslint/no-use-before-define
@@ -79,7 +81,7 @@ export class Context {
     /**
      * Calls the method passed as a callback with pass in the context from which the method was called.
      *
-     * The context can be obtained in the first line of the called function - *const ctx = getContext();*.
+     * The context can be obtained in the first line of the called function - *const ctx.do = getContext();*.
      *
      * Sync version primarily required to call anything within constructors.
      */
@@ -178,6 +180,6 @@ export const setContextNewIdGenerator = (generateNewId: () => any) => {
 /**
  * The context must be taken in the beginning of a function before a first 'await'.
  *
- * Ex.: *const ctx = getContext();*.
+ * Ex.: *const ctx.do = getContext();*.
  */
 export const getContext = (): Context => context;

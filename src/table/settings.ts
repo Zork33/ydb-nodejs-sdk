@@ -1,3 +1,5 @@
+/* eslint local-rules/context: "error" */
+
 import { google, Ydb } from 'ydb-sdk-proto';
 import * as grpc from '@grpc/grpc-js';
 

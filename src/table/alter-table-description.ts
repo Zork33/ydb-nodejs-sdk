@@ -1,3 +1,5 @@
+/* eslint local-rules/context: "error" */
+
 import { Ydb } from 'ydb-sdk-proto';
 import { Column } from './ydb';
 import { TableIndex } from './table-index';

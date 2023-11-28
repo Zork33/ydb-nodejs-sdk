@@ -1,5 +1,6 @@
 import { Context, getContext, NOT_A_CONTEXT } from './utils/context';
 import { Logger } from './utils/simple-logger';
+import { getLoggerFromObject } from './utils/get-logger-from-object';
 
 /**
  * Context with reference to the head object - driver.
@@ -13,13 +14,18 @@ export class ContextWithLogger extends Context {
      * This method should be called in methods that can be called by a client code - if this type of context
      * does not already exist, it will be created.  It is important to have access to Logger object to build new context.
      */
-    static getSafe(logger: Logger, methodName: string) {
+    static getSafe(methodName: string, loggerOrObject: Logger | any) {
         const ctx = getContext();
 
         let context = ctx.findContextByClass<ContextWithLogger>(ContextWithLogger);
 
         if (context === NOT_A_CONTEXT) {
-            context = new ContextWithLogger(ctx, logger);
+            context = new ContextWithLogger(
+                ctx,
+                typeof loggerOrObject.error === 'function'
+                    ? loggerOrObject
+                    : getLoggerFromObject(loggerOrObject),
+            );
         }
 
         context.trace(methodName);

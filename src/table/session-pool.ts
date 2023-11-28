@@ -1,3 +1,5 @@
+/* eslint local-rules/context: "error" */
+
 import EventEmitter from 'events';
 import _ from 'lodash';
 import DiscoveryService, { Endpoint } from '../discovery';

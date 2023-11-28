@@ -1,3 +1,5 @@
+/* eslint local-rules/context: "error" */
+
 import { Ydb } from 'ydb-sdk-proto';
 
 import IType = Ydb.IType;

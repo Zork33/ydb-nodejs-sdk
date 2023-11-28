@@ -1,3 +1,5 @@
+/* eslint local-rules/context: "error" */
+
 import EventEmitter from 'events';
 import { SessionPool } from './session-pool';
 import { Session } from './session';

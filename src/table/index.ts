@@ -1,3 +1,5 @@
+/* eslint local-rules/context: "error" */
+
 export * from './alter-table-description';
 export * from './settings';
 export * from './session';

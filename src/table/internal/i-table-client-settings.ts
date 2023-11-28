@@ -1,3 +1,5 @@
+/* eslint local-rules/context: "error" */
+
 import { IAuthService } from '../../credentials';
 import { ISslCredentials } from '../../ssl-credentials';
 import { IPoolSettings } from '../../driver';

@@ -1,3 +1,5 @@
+/* eslint local-rules/context: "error" */
+
 import EventEmitter from 'events';
 import * as grpc from '@grpc/grpc-js';
 import { Ydb } from 'ydb-sdk-proto';
