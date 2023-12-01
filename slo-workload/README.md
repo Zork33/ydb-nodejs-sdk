@@ -77,7 +77,7 @@ At first MaxID is configured to limit IDs in tasks.
 - `writeJob` generates and inserts rows with identifiers exceeding the `maxId` (the batch size will be used later in the `run` command, now inserts rows only one at a time)
 - `metricsJob` periodically sends metrics to Prometheus
 
-Table have these fields: 
+Table have these fields:
 - `objectIdKey` (`UINT32`)
 - `objectId` (`UINT32`)
 - `timestamp` (`UINT64`)

@@ -4,6 +4,7 @@
     "./src",
     "./config",
     "./scripts",
-    "./examples"
+    "./examples",
+    "./eslint-local-rules/examples"
   ]
 }
