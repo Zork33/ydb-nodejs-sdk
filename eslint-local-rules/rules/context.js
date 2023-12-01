@@ -51,24 +51,28 @@ module.exports = {
 
         /**
          * Nesting levels
-         * node, type, state
          */
         const stack = [];
 
         let state = {
             type: 'root', // class, ctxDo, call
             ignore: IGNORE_GLOBALS,
-            methodName: TRACKING_PREFIX,
+            methodName: null,
         };
 
         let rootFuncState;
+
+        const filenameParsed = path.parse(context.filename);
+        const folderPrefix = path.relative(path.join(process.cwd(), SRC_PATH), filenameParsed.dir).replace(/[\\/]/g, '.');
 
         const pushToStack = (type, name, opts) => {
             stack.push(state);
             state = {
                 ...opts,
                 type,
-                methodName: state.methodName === TRACKING_PREFIX ? `${state.methodName}${name}` : `${state.methodName}${TRACKING_DELIMITER}${name}`,
+                methodName: state.methodName === null
+                    ? `${TRACKING_PREFIX}${folderPrefix.length > 0 ? `${folderPrefix}.` : ''}${name}`
+                    : `${state.methodName}${TRACKING_DELIMITER}${name}`,
                 prevIgnore: state.ignore || state.prevIgnore,
                 // hasCtx: false, // true - at least one line with ctx.do...
                 // ctxNode: undefined, // line with CONTEXT_CLASS.get or CONTEXT_CLASS.safeGet
@@ -92,8 +96,6 @@ module.exports = {
         const isDecorator = (node) => context.getCommentsBefore(node).indexOf('@decorator');
 
         let anonymouseIndex = 0;
-
-        const filenameParsed = path.parse(context.filename);
 
         let anyContextInFile = false;
 
@@ -133,7 +135,7 @@ module.exports = {
 
                 // fullfill ignore from require()
                 if (node.callee.name === 'require') {
-                    if (!IGNORE[node.arguments[0].value]) return;
+                    if (!IGNORE_NPS[node.arguments[0].value]) return;
                     if (node.parent.type !== 'VariableDeclarator') return;
                     listVariableNames(node.parent.id);
                     return;
@@ -152,7 +154,7 @@ module.exports = {
                 }
 
                 // skip ctx.do...
-                if (node.callee.name === 'ctx' || node.callee.object?.name === 'ctx') return;
+                // if (node.callee.name === 'ctx' || node.callee.object?.name === 'ctx') return;
 
                 if (~['setTimeout', 'setInterval'].findIndex(v => v === node.callee.name)) {
                     // wrap setTimeout, setInterval
@@ -220,6 +222,22 @@ module.exports = {
                 debug('FunctionExpression:exit');
                 fixGetContext(node);
                 popFromStack();
+            },
+
+            'ThisExpression'(node) {
+                // this.logger -> ctx.logger
+                if (node.parent.type === 'MemberExpression' && node.parent.property.name === 'logger') {
+                    rootFuncState.hasCtx = true;
+                    if (debug.enabled) {
+                        console.info(400, 'fix', context.sourceCode.getText(node.parent));
+                        console.info(410, 'to', `ctx.${context.sourceCode.getText(node.parent).substring('this.'.length)}`);
+                    }
+                    context.report({
+                        node,
+                        message: 'Change to ctx.logger',
+                        fix: (fixer) => fixer.replaceText(node.parent, `ctx.${context.sourceCode.getText(node.parent).substring('this.'.length)}`),
+                    });
+                }
             },
         };
 
@@ -347,7 +365,8 @@ module.exports = {
                 return;
             }
 
-            const objOrFunctionName = node.callee.name || node.callee.object?.name;
+            // const objOrFunctionName = node.callee.name || node.callee.object?.name;
+            const objOrFunctionName = getLeftmostName(node.callee);
 
             if (debug.enabled) {
                 console.info(100, 'node', context.sourceCode.getText(node));
@@ -479,6 +498,12 @@ module.exports = {
                 default:
                     throw new Error(`Unexpected type: ${variableDeclaratorOrObjectPattern.type}`);
             }
+        }
+
+        function getLeftmostName(node) {
+            console.info(1000, node)
+            if (node.type === 'Identifier') return node.name;
+            if (node.type === 'MemberExpression') return getLeftmostName(node.object);
         }
     },
 };

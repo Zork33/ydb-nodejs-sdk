@@ -1,17 +1,21 @@
+import { ContextWithLogger } from '../../src/context-with-logger';
 // /* eslint-disable */
 /* eslint local-rules/context: "error" */
 
-function Retriable() {
-
-}
+const Retriable = () => {
+    ContextWithLogger.get('ydb-sdk:...eslint-local-rules.examples.Retriable');
+};
 
 @Retriable
 export class C {
     @Retriable
     public async M() {
-        const ctx = ContextWithLogger.getSafe('ydb-sdk:C.M', this);
+        ContextWithLogger.getSafe('ydb-sdk:...eslint-local-rules.examples.C.M', this);
+
+        ctx.logger.info('test');
 
         // /** */
+
         //
         // console.info(1000);
 
