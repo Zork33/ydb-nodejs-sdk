@@ -16,7 +16,9 @@
  */
 export interface IAsyncQueueIterator<T> {
     push(value: T): void;
+
     end(err?: Error): void;
+
     [Symbol.asyncIterator](): AsyncGenerator<T, void>;
 }
 
@@ -30,6 +32,8 @@ export function buildAsyncQueueIterator<T>(): IAsyncQueueIterator<T> {
     const queue: T[] = [];
     let isQueueOver: boolean | undefined;
     let error: Error | undefined;
+
+    let isGeneratorInstantiated: boolean | undefined;
 
     return {
         push(value: T): void {
@@ -53,26 +57,20 @@ export function buildAsyncQueueIterator<T>(): IAsyncQueueIterator<T> {
             }
         },
 
-        async *[Symbol.asyncIterator](): AsyncGenerator<T, void>  {
+        async* [Symbol.asyncIterator](): AsyncGenerator<T, void> {
+            if (isGeneratorInstantiated) throw new Error('Сan only be one instance of the generator');
+            isGeneratorInstantiated = true;
             while (true) {
-                if (queue.length > 0) {
-                    if (error) throw error;
-                    console.info(1000);
-                    yield queue.shift() as T;
-                } else if (isQueueOver) {
-                    console.info(1001);
-                    return;
-                } else {
+                if (error) throw error;
+                if (queue.length > 0) yield queue.shift() as T;
+                else if (isQueueOver) return;
+                else { // nothing in the queue and it is not ended
                     const waitNextItemPromise = new Promise<T | Symbol>((resolve, reject) => {
                         waitNextItemPromiseResolve = resolve;
                         waitNextItemPromiseReject = reject;
                     });
                     const value: T | Symbol = await waitNextItemPromise;
-                    if (value === QUEUE_END) {
-                        console.info(1002);
-                        return;
-                    }
-                    console.info(1003);
+                    if (value === QUEUE_END) return;
                     yield value as T;
                 }
             }
