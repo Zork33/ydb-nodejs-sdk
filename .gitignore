@@ -1,3 +1,6 @@
+#code coverage
+coverage
+
 #npm
 npm-debug.log*
 node_modules
